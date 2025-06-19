@@ -1,0 +1,13 @@
+created:
+    - database/factories/PositionFactory.php
+    - database/factories/JobApplicationFactory.php
+    - database/migrations/2025_06_19_091843_create_positions_table.php
+    - database/migrations/2025_06_19_091844_create_job_applications_table.php
+    - database/migrations/2025_06_19_091845_create_job_application_user_table.php
+    - app/Models/Position.php
+    - app/Models/JobApplication.php
+models:
+    User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, is_admin: 'boolean default:false', remember_token: 'string:100 nullable' }
+    Position: { title: string, description: string, status: string, max_applicants: unsignedInteger, relationships: { hasMany: JobApplication } }
+    Application: { position_id: unsignedInteger, applicant_user_id: unsignedInteger, date: datetime, status: string, relationships: { belongsTo: Position, belongsToMany: User } }
+    JobApplication: { position_id: unsignedInteger, applicant_user_id: unsignedInteger, date: datetime, status: string, relationships: { belongsTo: Position, belongsToMany: User } }

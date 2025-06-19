@@ -1,0 +1,16 @@
+models:
+  Position:
+    title: string
+    description: string
+    status: string
+    max_applicants: unsignedInteger
+    relationships:
+      hasMany: JobApplication
+
+  JobApplication:
+    position_id: unsignedInteger
+    applicant_user_id: unsignedInteger
+    date: datetime
+    status: string
+    relationships:
+      belongsTo: Position, User
