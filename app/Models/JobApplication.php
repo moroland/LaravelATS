@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,12 +27,25 @@ class JobApplication extends Model
     public function accept(): bool {
         $this->status = 'accepted';
         $this->save();
+
+        $this->applicant_user->notify(
+            Notification::make()
+                ->title('Your application to ' . $this->position->title . ' has been accepted.')
+                ->toDatabase(),
+        );
+
         return true;
     }
 
     public function reject(): bool {
         $this->status = 'rejected';
         $this->save();
+        $this->applicant_user->notify(
+            Notification::make()
+                ->title('Your application to ' . $this->position->title . ' has been rejected.')
+                ->toDatabase(),
+        );
+
         return true;
     }
 
