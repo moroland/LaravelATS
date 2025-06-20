@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\App\Resources;
 
-use App\Filament\Resources\PositionResource\Pages;
-use App\Filament\Resources\PositionResource\RelationManagers;
+use App\Filament\App\Resources\PositionResource\Pages;
+use App\Filament\App\Resources\PositionResource\RelationManagers;
 use App\Models\Position;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class PositionResource extends Resource
 {
@@ -27,13 +28,11 @@ class PositionResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\RichEditor::make('description')
-                    ->required(),
-                Forms\Components\Select::make('status')
-                    ->options(['open' => 'Open', 'closed' => 'Closed'])
-                    ->required(),
-                Forms\Components\TextInput::make('max_applicants')
                     ->required()
-                    ->numeric(),
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('status')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -42,16 +41,7 @@ class PositionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('max_applicants')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('job_applications_count')
-                    ->counts('jobApplications')
-                    ->sortable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -61,16 +51,9 @@ class PositionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->modifyQueryUsing(fn(Builder $query) => $query->where('status','open')->orderBy('created_at','desc'))
             ->filters([
                 //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -85,8 +68,7 @@ class PositionResource extends Resource
     {
         return [
             'index' => Pages\ListPositions::route('/'),
-            'create' => Pages\CreatePosition::route('/create'),
-            'edit' => Pages\EditPosition::route('/{record}/edit'),
+            'view' => Pages\ViewPosition::route('/{record}/view'),
         ];
     }
 }

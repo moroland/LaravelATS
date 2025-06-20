@@ -42,10 +42,6 @@ class JobApplicationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('position.title')
-                    ->numeric()
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('applicant_user.name')
                     ->numeric()
                     ->searchable()
@@ -55,25 +51,15 @@ class JobApplicationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
+            ->defaultGroup('position.title')
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -88,6 +74,7 @@ class JobApplicationResource extends Resource
     {
         return [
             'index' => Pages\ListJobApplications::route('/'),
+            'view' => Pages\ViewJobApplication::route('/{record}/view'),
         ];
     }
 }

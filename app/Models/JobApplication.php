@@ -23,6 +23,18 @@ class JobApplication extends Model
         'status',
     ];
 
+    public function accept(): bool {
+        $this->status = 'accepted';
+        $this->save();
+        return true;
+    }
+
+    public function reject(): bool {
+        $this->status = 'rejected';
+        $this->save();
+        return true;
+    }
+
     /**
      * Get the attributes that should be cast.
      *

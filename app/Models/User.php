@@ -51,10 +51,11 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function canAccessPanel(Panel $panel): bool {
-        return $this->isAdmin();
+        // Admin panel can only be accessed by admins.
+        return ($panel->getId() != 'admin' || $this->isAdmin());
     }
 
-    private function isAdmin() {
+    public function isAdmin() {
         return $this->is_admin;
     }
 }

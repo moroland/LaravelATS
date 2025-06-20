@@ -26,9 +26,17 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('avatar')
+                    ->imageEditor()
+                    ->image()
+                    ->directory('avatars')
+                    ->visibility('private'),
+                Forms\Components\RichEditor::make('about'),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('phone')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_admin')
                     ->required(),
